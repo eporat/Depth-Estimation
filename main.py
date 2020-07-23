@@ -8,12 +8,17 @@ dataset = DepthMapDataset("C:\\Users\\ethan\\Downloads\\geoPose3K_final_publish\
 dataloader = DepthMapDataLoader(dataset=dataset)
 
 for i_batch, sample_batched in enumerate(dataloader):
-    images, depth_maps = sample_batched
-    
+    images, scales, depth_maps = sample_batched
+    print(scales)
+
     for image, depth_map in zip(images, depth_maps):
-        plt.figure(1)
-        plt.imshow(image)
-        plt.figure(2)
-        plt.imshow(depth_map)
+        fig, (ax1, ax2) = plt.subplots(ncols=2)
+
+        # plot just the positive data and save the
+        # color "mappable" object returned by ax1.imshow
+        image_plot = ax1.imshow(image)
+        depth_map_plot = ax2.imshow(depth_map)
+        fig.colorbar(depth_map_plot, ax=ax2)
         plt.show()
+
         
