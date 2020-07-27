@@ -4,7 +4,7 @@ import numpy as np
 import os
 from dataset import DepthMapDataset, DepthMapDataLoader
 
-dataset = DepthMapDataset("C:\\Users\\ethan\\Downloads\\geoPose3K_final_publish\\geoPose3K_final_publish")
+dataset = DepthMapDataset("C:\\depth estimation\\mini-dataset")
 dataloader = DepthMapDataLoader(dataset=dataset)
 
 for i_batch, sample_batched in enumerate(dataloader):
