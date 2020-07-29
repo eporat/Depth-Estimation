@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 num_epochs = 1
 
-dataset = DepthMapDataset("C:\\depth estimation\\mini-dataset")
+dataset = DepthMapDataset("C:\\depth estimation\\big-dataset")
 dataloader = DepthMapDataLoader(dataset=dataset, batch_size=1)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

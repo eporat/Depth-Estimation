@@ -32,15 +32,10 @@ class DepthMapDataset(Dataset):
             idx = idx.tolist()
 
         folder = self.folders[idx]
-        root = f'{self.dataset}/{folder}/cyl'
+        root = f'{self.dataset}/{folder}'
         image_path = os.path.join(root, 'photo_crop.jpg')
-        depth_map_path = f'{root}/distance_crop.pfm.gz'
-        
-        if not os.path.exists('temp'):
-            os.makedirs('temp')
-            
-        gunzip_shutil(depth_map_path, 'temp/file.pfm')
-        depth_map, scale = load_pfm(open('temp/file.pfm', 'rb'))
+        depth_map_path = os.path.join(root, 'distance_crop.pfm')
+        depth_map, scale = load_pfm(open(depth_map_path, 'rb'))
         depth_map = depth_map[::-1]
         image = io.imread(image_path)
 
@@ -82,10 +77,10 @@ def collate_fn(batch):
     max_w = math.ceil(max(image.shape[0] for image in images) / size) * size
     max_h = math.ceil(max(image.shape[1] for image in images) / size) * size
     
-    new_images = [torch.from_numpy(np.rollaxis(add_padding(image, max_w, max_h), 2)) for image in images]
-    depth_maps = [torch.from_numpy(add_padding(item['depth_map'], max_w, max_h)) for item in batch]
+    new_images = [np.rollaxis(add_padding(image, max_w, max_h), 2) for image in images]
+    depth_maps = [add_padding(item['depth_map'], max_w, max_h) for item in batch]
     
-    batch = {'images': torch.stack(new_images).float(), 'depth_maps': torch.stack(depth_maps), 'shapes': shapes}
+    batch = {'images': np.stack(new_images), 'depth_maps': np.stack(depth_maps), 'shapes': shapes}
     del images[:]
     del new_images[:]
     del depth_maps[:]
